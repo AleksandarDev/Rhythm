@@ -41,15 +41,20 @@ namespace WpfApplication1
 			b = 255-Math.Max(0, Math.Min(b, 255));
 
 			if (this.isSending) return;
-			var request = "/?r=" + ((int)(r)).ToString().PadLeft(3, '0') + "&g=" +
-						 ((int)(g)).ToString().PadLeft(3, '0') + "&b=" + ((int)(b)).ToString().PadLeft(3, '0');
-			if (this.isSending) return;
-			this.isSending = true;
-			this.lastMessage = DateTime.Now;
-			await client.GetAsync(new Uri(request, UriKind.Relative));
-			System.Diagnostics.Debug.WriteLine(DateTime.Now - this.lastMessage);
-			
-			this.isSending = false;
+		    try
+		    {
+		        var request = "/?r=" + ((int) (r)).ToString().PadLeft(3, '0') + "&g=" +
+		                      ((int) (g)).ToString().PadLeft(3, '0') + "&b=" + ((int) (b)).ToString().PadLeft(3, '0');
+		        if (this.isSending) return;
+		        this.isSending = true;
+		        this.lastMessage = DateTime.Now;
+		        await client.GetAsync(new Uri(request, UriKind.Relative));
+		        System.Diagnostics.Debug.WriteLine(DateTime.Now - this.lastMessage);
+		    }
+		    finally
+		    {
+		        this.isSending = false;
+		    }
 		}
 
 		private void Callback(object state)
